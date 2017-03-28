@@ -4,15 +4,6 @@
       <h1>Truck Order List</h1>
     </header>
 
-    <ul>
-      {{#each truckOrders}}
-        {{> truckOrder}}
-      {{/each}}
-    </ul>
-  </div>
+{{> reactiveTable settings=settings}}
+</div>
 </body>
-
-<template name="truckOrder">
-  <li>{{truck}}</li>
-  <li>{{arrival_time}}</li>
-</template>
