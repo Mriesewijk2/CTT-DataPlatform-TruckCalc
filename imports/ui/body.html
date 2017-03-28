@@ -1,0 +1,18 @@
+<body>
+  <div class="container">
+    <header>
+      <h1>Truck Order List</h1>
+    </header>
+
+    <ul>
+      {{#each truckOrders}}
+        {{> truckOrder}}
+      {{/each}}
+    </ul>
+  </div>
+</body>
+
+<template name="truckOrder">
+  Test
+  <li>{{truck}}</li>
+</template>
