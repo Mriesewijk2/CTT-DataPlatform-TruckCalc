@@ -1,10 +1,19 @@
 {
   "dev": {
-      "user": "",
-      "pwd": "",
-      "url": "localhost",
-      "port": "27017",
-      "db": "test"
-    }
-  }
+    "user": "",
+    "pwd": "",
+    "url": "localhost",
+    "port": "27017",
+    "db": "test"
+  },
+
+  "collections":
+    [
+      {
+    "name": "truck_orders",
+    "type": "json",
+    "file": "config/fixtures/truckorders.json",
+    "drop": true
+   }
+  ]
 }
