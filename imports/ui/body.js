@@ -14,3 +14,16 @@ Template.body.helpers({
     };
   }
 });
+
+Template.addTruckOrderForm.events({
+  'submit form': function(event){
+      event.preventDefault();
+      var ordernumbervar = event.target.ordernumber.value;
+      console.log(ordernumbervar);
+      TruckOrders.insert({
+        t_number: ordernumbervar ,
+        arrival_time: 1100
+      });
+      event.target.ordernumber.value = "";
+    }
+});
