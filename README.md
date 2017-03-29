@@ -1,9 +1,17 @@
 # CTT-DataPlatform-TruckCalc
 A first version of the CTT dataplatform which will be used to support decision making within CTT
 
+## Requirements
+- Meteor
+- External Mongodb (recommended)
+- Grunt (for easier imports)
+
 ## Installation
-- Install meteor
+
 - Clone repo
 - `cd path/to/repo`
 - `meteor npm install` to install the node_modules
-- `meteor`
+- specify credentials for database in config/parameters.json
+- provide needed json import files in config/fixtures
+- `grunt mongoimport`
+- `meteor` (with specified external database if needed)

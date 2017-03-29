@@ -1,9 +1,0 @@
-# yml file for easier authentication in the future, startup scripts can be put in
-# this folder as well
-
-test:
-    user: null
-    pwd: null
-    url: null
-    port: null
-    db: null
