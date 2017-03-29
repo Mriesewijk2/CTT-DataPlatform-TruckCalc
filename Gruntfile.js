@@ -7,6 +7,8 @@ var config = {pkg: grunt.file.readJSON('./package.json')};
 
 // load configuration (if some file exports an fn() a deep clone of `config` is provided to it)
 grunt.util._.merge(config, loader.load('config/parameters.json'));
+loader.merge('config/collections.json', config);
+
 grunt.initConfig(config);
 
 grunt.initConfig({
