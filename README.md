@@ -4,7 +4,7 @@ A first version of the CTT dataplatform which will be used to support decision m
 ## Requirements
 - Meteor
 - External Mongodb (recommended)
-- Grunt (for easier imports)
+- Grunt-cli (for easier imports)
 
 ## Installation
 

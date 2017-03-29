@@ -1,3 +1,4 @@
 node_modules/
 startup/
 config/fixtures/
+config/parameters.json
