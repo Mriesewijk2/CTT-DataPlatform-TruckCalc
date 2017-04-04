@@ -10,6 +10,7 @@ Template.body.helpers({
       rowsPerPage: 100,
       showFilter: true,
       fields: [
+        'booking',
         'container',
         'needed_depart_time',
         'arrival_time',
