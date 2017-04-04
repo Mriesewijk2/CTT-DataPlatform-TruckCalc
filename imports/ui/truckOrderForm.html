@@ -1,9 +1,12 @@
 <template name="addTruckOrderForm">
     <form>
-        <input type="number" name="ordernumber" placeholder="Order number">
-        <input type="text" name="departure_location" placeholder="From">
-        <input type="text" name="destination" placeholder="Load Destination">
-        <input type="date" name="arrival_time" placeholder="Arrival time">
+        <input type="number" name="ordernumber" placeholder="Order number" required>
+        <input type="text" name="departure_location" placeholder="From" required>
+        <input type="text" name="destination" placeholder="Load Destination" required>
+        <div class="input-group datetimepicker col-md-4">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+          <input class="set-due-date form-control" type="text" name="arrival_time" required/>
+        </div>
         <input type="submit" value="Add Order">
     </form>
 </template>
