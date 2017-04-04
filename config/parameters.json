@@ -1,0 +1,9 @@
+{
+  "dev": {
+    "user": "{{ placeholder_user }}",
+    "pwd": "{{ placeholder_pwd }}",
+    "url": "{{ placeholder url }}",
+    "port": "{{ placeholer_port }}",
+    "db": "{{ placeholder_db }}"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "collections":
+    [
+    {
+      "name": "truck_orders",
+      "type": "json",
+      "file": "config/fixtures/truckorders.json",
+      "drop": true
+    },
+
+    {
+      "name": "geolocations",
+      "type": "json",
+      "file": "config/fixtures/geolocations.json",
+      "drop": true
+    }
+  ]
+}
