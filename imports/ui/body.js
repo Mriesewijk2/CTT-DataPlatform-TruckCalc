@@ -3,16 +3,24 @@ import { TruckOrders } from '../api/truckOrders.js';
 
 import './body.html';
 import './table.js';
+import './truckOrderForm.html';
 
 Template.addTruckOrderForm.events({
   'submit form': function (event) {
     event.preventDefault();
-    var ordernumbervar = event.target.ordernumber.value;
-    console.log(ordernumbervar);
+    var target = event.target;
+    var arrivalTime = target.ordernumber.value;
     TruckOrders.insert({
-      t_number: ordernumbervar,
-      arrival_time: 1100
+      booking: target.ordernumber.value,
+      arrival_time: arrivalTime,
+      needed_depart_time: departTimeCalc(arrivalTime),
+      load_disc: target.destination.value,
+      from: target.destination.value
     });
     event.target.ordernumber.value = '';
   }
 });
+
+function departTimeCalc (arrivalTime) {
+  return 1152;
+}

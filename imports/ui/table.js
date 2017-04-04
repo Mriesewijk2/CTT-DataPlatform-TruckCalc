@@ -4,7 +4,7 @@ import { TruckOrders } from '../api/truckOrders.js';
 // JS code for the table
 Template.body.helpers({
   settings: function () {
-    var collection = TruckOrders.find({ arrival_time: { $exists: true, $ne: null}});
+    var collection = TruckOrders.find({arrival_time: { $exists: true, $ne: null}});
     return {
       collection: collection,
       rowsPerPage: 100,
@@ -14,6 +14,7 @@ Template.body.helpers({
         'container',
         'needed_depart_time',
         'arrival_time',
+        'load_disc',
         'city']
     };
   }
