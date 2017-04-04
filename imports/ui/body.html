@@ -1,9 +1,26 @@
 <body>
+  <header>
+    <h1>Truck Order List</h1>
+  </header>
   <div class="container">
-    <header>
-      <h1>Truck Order List</h1>
-    </header>
-    <!-- Template for the table  -->
-    {{> reactiveTable class="table table-bordered table-hover" settings=settings}}
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      Add new transport element
+    </button>
+    <div class="collapse" id="collapseExample">
+      <div class="well">
+        {{> buttontemp}}
+      </div>
   </div>
+{{> reactiveTable class="table table-bordered table-hover" settings=settings}}
+</div>
 </body>
+
+<template name="buttontemp">
+    {{> addTruckOrderForm}}
+</template>
+<template name="addTruckOrderForm">
+    <form>
+        <input type="text" name="ordernumber">
+        <input type="submit" value="Add Ordernumber">
+    </form>
+</template>
