@@ -1,9 +1,9 @@
 {
   "dev": {
-    "user": "meteor",
-    "pwd": "Banaan123",
-    "url": "localhost",
-    "port": "27017",
-    "db": "testdb"
+    "user": "{{ placeholder_user }}",
+    "pwd": "{{ placeholder_pwd }}",
+    "url": "{{ placeholder url }}",
+    "port": "{{ placeholer_port }}",
+    "db": "{{ placeholder_db }}"
   }
 }
