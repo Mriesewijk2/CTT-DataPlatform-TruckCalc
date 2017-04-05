@@ -24,7 +24,7 @@ Template.addTruckOrderForm.events({
       arrival_time: arrivalTime,
       needed_depart_time: departTimeCalc(arrivalTime),
       load_disc: target.destination.value,
-      from: target.destination.value
+      city: target.departure_location.value
     });
     event.target.reset();
   }
