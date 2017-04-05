@@ -10,12 +10,14 @@ Template.body.helpers({
       rowsPerPage: 100,
       showFilter: true,
       fields: [
-        'booking',
-        'container',
-        'needed_depart_time',
-        'arrival_time',
-        'load_disc',
-        'city']
+        { key: 'booking', label: 'Booking Nr.'},
+        { key: 'container', label: 'Container Nr.'},
+        { key: 'needed_depart_time', label: 'Departure Time'},
+        { key: 'arrival_time', label: 'Arrival Time'},
+        { key: 'city', label: 'From'},
+        { key: 'load_disc', label: 'Destination'}
+
+        ]
     };
   }
 });

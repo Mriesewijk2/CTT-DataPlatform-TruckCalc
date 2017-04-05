@@ -20,6 +20,7 @@ Template.addTruckOrderForm.events({
     var arrivalTime = moment(new Date(target.arrival_time.value)).format();
     TruckOrders.insert({
       booking: target.ordernumber.value,
+      container: target.containernumber.value,
       arrival_time: arrivalTime,
       needed_depart_time: departTimeCalc(arrivalTime),
       load_disc: target.destination.value,
