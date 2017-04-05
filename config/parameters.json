@@ -1,9 +1,0 @@
-{
-  "dev": {
-    "user": "meteor",
-    "pwd": "Banaan123",
-    "url": "localhost",
-    "port": "27017",
-    "db": "testdb"
-  }
-}
