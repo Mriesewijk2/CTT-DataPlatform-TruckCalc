@@ -11,7 +11,7 @@ Template.addTruckOrderForm.onRendered(function () {
     format: 'HH:mm DD-MM-YYYY'
   });
 });
-
+//testcomment
 Template.addTruckOrderForm.events({
   'submit form': function (event) {
     event.preventDefault();
