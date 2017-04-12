@@ -9,9 +9,86 @@
     },
 
     {
-      "name": "geolocations",
+      "name": "customerGeolocations",
       "type": "json",
-      "file": "config/fixtures/geolocations.json",
+      "file": "config/fixtures/customerGeolocations.json",
+      "drop": true
+    },
+
+    {
+      "name": "trajectData",
+      "type": "json",
+      "file": "config/fixtures/trajectData.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnActivities",
+      "type": "json",
+      "file": "config/fixtures/CWReturnActivities.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnAxleWeights",
+      "type": "json",
+      "file": "config/fixtures/CWReturnAxleWeights.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnCanbusPerformance",
+      "type": "json",
+      "file": "config/fixtures/CWReturnCanbusPerformance.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnDrivers",
+      "type": "json",
+      "file": "config/fixtures/CWReturnDrivers.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnJobInfo",
+      "type": "json",
+      "file": "config/fixtures/CWReturnJobInfo.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnTrips",
+      "type": "json",
+      "file": "config/fixtures/CWReturnTrips.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnJobs",
+      "type": "json",
+      "file": "config/fixtures/CWReturnJobs.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnTruckCanbusHistory",
+      "type": "json",
+      "file": "config/fixtures/CWReturnTruckCanbusHistory.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnVehiclePosition",
+      "type": "json",
+      "file": "config/fixtures/CWReturnVehiclePosition.json",
+      "drop": true
+    },
+
+    {
+      "name": "CWReturnVehicles",
+      "type": "json",
+      "file": "config/fixtures/CWReturnVehicles.json",
       "drop": true
     }
   ]
