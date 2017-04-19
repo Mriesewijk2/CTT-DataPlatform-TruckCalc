@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating';
 import { moment } from 'meteor/momentjs:moment';
 import { Meteor } from 'meteor/meteor';
-import { averageTravelTimes } from '../../lib/collections.js';
+import { averageTravelTimes, customerGeolocations } from '../../lib/collections.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 import './body.html';
@@ -12,12 +12,14 @@ import '../subscriptions.js';
 if (Meteor.isClient) {
   Template.body.onCreated(function bodyOnCreated () {
     this.state = new ReactiveDict();
-    console.log(averageTravelTimes.find({}));
   });
 
   Template.body.helpers({
     averages () {
       return averageTravelTimes.find({});
+    },
+    abbreviations () {
+      return customerGeolocations.find({});
     }
   });
 
