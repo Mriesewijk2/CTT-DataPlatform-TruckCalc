@@ -2,16 +2,25 @@
   <header>
     <h1>Truck Order List</h1>
   </header>
+  {{> loginButtons}}
+  {{#if currentUser}}
   <div class="container">
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
       Add new transport element
     </button>
-    {{> loginButtons}} 
+
+
+
+
     <div class="collapse" id="collapseExample">
       <div class="well">
         {{> addTruckOrderForm}}
-      </div>
+    </div>
   </div>
+
+
+
 {{> reactiveTable class="table table-bordered table-hover" settings=settings}}
 </div>
+{{/if}}
 </body>
