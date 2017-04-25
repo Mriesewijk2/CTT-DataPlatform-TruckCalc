@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
-import { averageTravelTimes } from '../lib/collections.js';
-import { customerGeolocations } from '../lib/collections.js';
+import { averageTravelTimes, customerGeolocations } from '../lib/collections.js';
 
 if (Meteor.isServer) {
   Meteor.publish('averageTravelTimes', function () {
+    console.log('published');
     return averageTravelTimes.find();
   });
   Meteor.publish('customerGeolocations', function () {

@@ -29,8 +29,7 @@ if (Meteor.isClient) {
   function addGeoLocations (collection) {
     var array = collection.fetch();
     var result = [];
-    var i = 0;
-      for (i = 0; i < array.length; i++) {
+      for (var i = 0; i < array.length; i++) {
         var customer = array[i];
         var geolocation = customerGeolocations.findOne({ Code: customer.customerAbrv });
         if(geolocation) {

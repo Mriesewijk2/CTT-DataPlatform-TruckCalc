@@ -17,9 +17,6 @@ if (Meteor.isClient) {
   Template.body.helpers({
     averages () {
       return averageTravelTimes.find({});
-    },
-    abbreviations () {
-      return customerGeolocations.find({});
     }
   });
 
