@@ -1,24 +1,24 @@
 import { Template } from 'meteor/templating';
 import { Meteor } from 'meteor/meteor';
-import { averageTravelTimes, customerGeolocations } from '../../lib/collections.js';
+import { averageTravelTimes, customerGeolocations, truckPlanning } from '../../lib/collections.js';
 
 if (Meteor.isClient) {
   // JS code for the table
   Template.body.helpers({
     settings: function () {
       var collection = averageTravelTimes.find({});
-      var averagesGeolocations = addGeoLocations(collection);
+      // var averagesGeolocations = addGeoLocations(collection);
       return {
-        collection: averagesGeolocations,
+        collection: collection,
         rowsPerPage: 100,
         showFilter: true,
         fields: [
-          { key: 'customerAbrv', label: 'Customer Abrv'},
-          { key: 'averageTravelTime', label: 'average Travel Time'},
-          { key: 'createdAt', label: 'createdAt'},
-          { key: 'editedAt', label: 'editedAt'},
-          { key: 'latitude', label: 'latitude'},
-          { key: 'longitude', label: 'longitude'}
+          { key: 'concatenatedCode', label: 'concatenatedCode' },
+          { key: 'departCode', label: 'Depart Code' },
+          { key: 'destinationCode', label: 'destinationCode' },
+          { key: 'averageTravelTime', label: 'averageTravelTime' },
+          { key: 'createdAt', label: 'createdAt' },
+          { key: 'editedAt', label: 'editedAt' }
         ]
       };
     }
