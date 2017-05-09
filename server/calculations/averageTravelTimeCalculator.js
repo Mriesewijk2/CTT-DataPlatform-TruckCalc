@@ -5,34 +5,33 @@ import { Meteor } from 'meteor/meteor';
 if (Meteor.isServer) {
   averageTravelTimeCalculate = function (departCode, destinationCode) {
     var truckPlannings = getTruckPlannings(departCode, destinationCode).fetch();
-    //console.log('trigger');
-    // console.log(truckPlannings.length);
     var totalTime = 0;
     var count = 0;
     var i;
     var j;
+    var foundtrucksAndDestination = 0;
+    console.log('truckplanning length: ', truckPlannings.length);
     for (i = 0; i < truckPlannings.length; i++) {
+      // get the CWVehicleID from the specific id in the truckplanning
       var vehicleID = getCWVehicleID(truckPlannings[i].Truck);
-      //console.log(i);
-      //console.log('id ', truckPlannings[i]._id);
-      //console.log('vehicleID', vehicleID);
+      // get the customerGeolocations record for a specific destinationCode
       var destination = getDestination(destinationCode);
       if (vehicleID && destination) {
+        foundtrucksAndDestination++;
+        console.log('foundtrucksAndDestination: ', foundtrucksAndDestination);
+        // gets the departDateTime from the truckplanning, converted to a standard Datetime
         var departDateTime = transformDateTime(truckPlannings[i].DepartTime, truckPlannings[i].DepartGate);
-        //console.log('DepartTime', departDateTime.format());
-        if(truckPlannings[i].ReturnTime && truckPlannings[i].ReturnGate){
+        if(truckPlannings[i].ReturnTime && truckPlannings[i].ReturnGate) {
+          // gets the returnDateTime from the truckplanning, converted to a standard Datetime
           var returnDateTime = transformDateTime(truckPlannings[i].ReturnTime, truckPlannings[i].ReturnGate);
-          //console.log('ReturnTime', returnDateTime.format());
         }
-        //console.log('departDateTime: ', departDateTime.format());
+        // gets the CW vehiclePositions in an array
         var vehiclePositions = getCWVehiclePostion(vehicleID, departDateTime, returnDateTime).fetch();
         //console.log('vehiclePositions', vehiclePositions.length);
         for ( j = 0; j < vehiclePositions.length; j++) {
-    			if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
-            //console.log('inRange');
-            //console.log('Receivedtime1 ', vehiclePositions[j].ReceivedTime);
-            //console.log('Receivedtime2', departDateTime);
-            //console.log('diff ', moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes());
+    			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
+            // if ((convertNumberToCoordinateDouble(destination.Longitude) - 0.0004 < vehiclePositions[j].Longitude < convertNumberToCoordinateDouble(destination.Longitude) + 0.0004)
+            //       && (convertNumberToCoordinateDouble(destination.Latitude) - 0.0004 < vehiclePositions[j].Latitude < convertNumberToCoordinateDouble(destination.Latitude) + 0.0004));
             var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
             if(time > 5 && time < 600){
               totalTime += time;
