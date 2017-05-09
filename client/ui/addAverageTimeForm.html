@@ -1,0 +1,17 @@
+<template name="addAverageTimeForm">
+  <form>
+    Departure Location:
+    <select id="departCode" class="form-control">
+      {{#each locations}}
+        <option value="{{Code}}"> {{Code}}</option>
+      {{/each}}
+    </select>
+    Destination:
+    <select id="destinationCode" class="form-control">
+      {{#each locations}}
+        <option value="{{Code}}"> {{Code}}</option>
+      {{/each}}
+    </select>
+    <input type="submit" value="Add Order">
+  </form>
+</template>

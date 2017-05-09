@@ -90,6 +90,13 @@
       "type": "json",
       "file": "config/fixtures/CWReturnVehicles.json",
       "drop": true
+    },
+
+    {
+      "name": "truckPlanning",
+      "type": "json",
+      "file": "config/fixtures/truckPlanning.json",
+      "drop": true
     }
   ]
 }
