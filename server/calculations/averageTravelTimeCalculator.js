@@ -57,14 +57,34 @@ if (Meteor.isServer) {
     } else {
       //xx-xx-xx
       licensestring = license.substr(0,2)+ "-" + license.substr(2,4) + "-" + license.substr(4);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
+
       //xx-xxx-x
-      licensetring = license.substr(0,2) + "-" + license.substr(2,5) + "-" + license.substr(5);
+      licensestring = license.substr(0,2) + "-" + license.substr(2,5) + "-" + license.substr(5);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
+
       //x-xxx-xx
-      licensetring = license.substr(0,1) + "-" + license.substr(1,4) + "-" + license.substr(5); 
+      licensestring = license.substr(0,1) + "-" + license.substr(1,4) + "-" + license.substr(4);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
+
       //xxx-xx-x
-      licensetring = license.substr(0,3) + "-" + license.substr(3,5) + "-" + license.substr(5);
+      licensestring = license.substr(0,3) + "-" + license.substr(3,5) + "-" + license.substr(5);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
       return;
     }
+
   }
 
   function transformDateTime(numberTime, date) {
