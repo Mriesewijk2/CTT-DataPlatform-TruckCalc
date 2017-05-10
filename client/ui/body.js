@@ -43,7 +43,6 @@ if (Meteor.isClient) {
       event.preventDefault();
       var target = event.target;
       Meteor.call('average.insert', target.departCode.value, target.destinationCode.value);
-      event.target.reset();
     }
   });
 }

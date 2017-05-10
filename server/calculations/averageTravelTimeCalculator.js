@@ -9,16 +9,12 @@ if (Meteor.isServer) {
     var count = 0;
     var i;
     var j;
-    var foundtrucksAndDestination = 0;
-    console.log('truckplanning length: ', truckPlannings.length);
     for (i = 0; i < truckPlannings.length; i++) {
       // get the CWVehicleID from the specific id in the truckplanning
       var vehicleID = getCWVehicleID(truckPlannings[i].Truck);
       // get the customerGeolocations record for a specific destinationCode
-      var destination = getDestination(destinationCode);
+      var destination = getLocation(destinationCode);
       if (vehicleID && destination) {
-        foundtrucksAndDestination++;
-        console.log('foundtrucksAndDestination: ', foundtrucksAndDestination);
         // gets the departDateTime from the truckplanning, converted to a standard Datetime
         var departDateTime = transformDateTime(truckPlannings[i].DepartTime, truckPlannings[i].DepartGate);
         if(truckPlannings[i].ReturnTime && truckPlannings[i].ReturnGate) {
@@ -27,24 +23,20 @@ if (Meteor.isServer) {
         }
         // gets the CW vehiclePositions in an array
         var vehiclePositions = getCWVehiclePostion(vehicleID, departDateTime, returnDateTime).fetch();
-        //console.log('vehiclePositions', vehiclePositions.length);
-        for ( j = 0; j < vehiclePositions.length; j++) {
-    			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
-            // if ((convertNumberToCoordinateDouble(destination.Longitude) - 0.0004 < vehiclePositions[j].Longitude < convertNumberToCoordinateDouble(destination.Longitude) + 0.0004)
-            //       && (convertNumberToCoordinateDouble(destination.Latitude) - 0.0004 < vehiclePositions[j].Latitude < convertNumberToCoordinateDouble(destination.Latitude) + 0.0004));
-            var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
-            if(time > 5 && time < 600){
-              totalTime += time;
-              count++;
-            }
-            console.log('totalTime: ', totalTime);
-            console.log('count: ', count);
-            break;
-    			}
+        if (inRange(vehiclePositions[0].Longitude, vehiclePositions[0].Latitude, getLocation(departCode).Longitude, getLocation(departCode).Latitude)) {
+          for ( j = 0; j < vehiclePositions.length; j++) {
+      			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
+              var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
+              if(time > 5 && time < 600){
+                totalTime += time;
+                count++;
+              }
+              break;
+      			}
+          }
     		}
       }
     }
-    console.log('Done: ', totalTime / count);
     return totalTime / count;
   };
 
@@ -73,8 +65,6 @@ if (Meteor.isServer) {
 
   // get the truck Plannings from the Modality data
   function getTruckPlannings (departCode, destinationCode, returnCode) {
-    //console.log('depart ', departCode);
-    //console.log('LoadDisch ', destinationCode);
     return truckPlanning.find({ From: departCode, LoadDisch: destinationCode, DepartGate: /.*2017.*/ });
   }
 
@@ -88,7 +78,7 @@ if (Meteor.isServer) {
   }
 
   // get the destination from the customerGeolocations collection
-  function getDestination (destinationCode) {
+  function getLocation (destinationCode) {
     return customerGeolocations.findOne({ Code: destinationCode });
   }
 
@@ -96,10 +86,6 @@ if (Meteor.isServer) {
   function inRange (lonpos, latpos, lonclient, latclient) {
     var correctLonPos = convertNumberToCoordinateDouble(lonpos);
     var correctLatPos = convertNumberToCoordinateDouble(latpos);
-    //console.log('lonpos ', correctLonPos);
-    //console.log('latpos ', correctLatPos);
-    //console.log('lonclient ', lonclient);
-    //console.log('latclient ', latclient);
     var R = 6371e3; // metres
     var φ1 = toRad(latpos);
     var φ2 = toRad(latclient);
