@@ -10,10 +10,7 @@ if (Meteor.isServer) {
     'average.insert' (departCode, destinationCode) {
       var concatenatedCode = departCode.concat(destinationCode);
       var exists = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
-      console.log('destinationCode: ', destinationCode);
-      console.log('departCode: ', departCode);
       var googleTime = getGoogleTravelTime(departCode, destinationCode);
-      console.log(googleTime);
       if (exists) {
         // still need a check on how long ago the time was calculated
         // var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
