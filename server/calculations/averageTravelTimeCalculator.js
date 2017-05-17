@@ -43,11 +43,40 @@ if (Meteor.isServer) {
   // get the CarrierWeb vehicle id from the license entered in Modality
   function getCWVehicleID (license) {
     var cwVehicle = CWReturnVehicles.findOne({ License: license });
+    var licensestring;
     if (cwVehicle) {
       return cwVehicle.CWVehicleID;
     } else {
+      //xx-xx-xx
+      licensestring = license.substr(0,2)+ "-" + license.substr(2,4) + "-" + license.substr(4);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
+
+      //xx-xxx-x
+      licensestring = license.substr(0,2) + "-" + license.substr(2,5) + "-" + license.substr(5);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
+
+      //x-xxx-xx
+      licensestring = license.substr(0,1) + "-" + license.substr(1,4) + "-" + license.substr(4);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
+
+      //xxx-xx-x
+      licensestring = license.substr(0,3) + "-" + license.substr(3,5) + "-" + license.substr(5);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if(cwVehicle){
+        return cwVehicle.CWVehicleID;
+      }
       return;
     }
+
   }
 
   function transformDateTime(numberTime, date) {
