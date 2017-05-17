@@ -13,10 +13,17 @@ if (Meteor.isClient) {
         collection: tableData,
         rowsPerPage: 10,
         showFilter: true,
+        rowClass: function(item){
+          var css = 'success';
+          if (item.LoadDisch === 'ZETOEN'){
+            css = 'danger';
+          }
+          return css;
+        },
         fields: [
           { key: '_id', label: 'id'},
           { key: 'From', label: 'From' },
-          { key: 'LoadDisch', label: 'To' },
+          { key: 'LoadDisch', label: 'To'},
           { key: 'PlannedDepartTime', label: 'Planned Depart Time' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
           { key: 'To', label: 'Return' },
