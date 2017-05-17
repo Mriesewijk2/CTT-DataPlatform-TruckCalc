@@ -35,10 +35,6 @@ if (Meteor.isClient) {
   Template.calculateTempl.events({
     'click #calculate': function (e) {
       e.preventDefault();
-      var string = e.target.value;
-      var id = string.substr(0, 7) + 'd' + string.substr(8);
-      console.log(id);
-      Meteor.call('truckPlanning.calculate', id);
     }
   });
 

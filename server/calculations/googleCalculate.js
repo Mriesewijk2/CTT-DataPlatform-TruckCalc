@@ -6,41 +6,31 @@ import './apiKeys.js';
 
 if (Meteor.isServer) {
   getGoogleTravelTime = function (origin, destination) {
-    var originObject = customerGeolocations.findOne({Code: origin});
-    var originGeolocations = originObject.Latitude + ',' + originObject.Longitude;
-    var destinationObject = customerGeolocations.findOne({Code: destination});
-    var destinationGeolocations = destinationObject.Latitude + ',' + destinationObject.Longitude;
+    var originGeolocations = origin.Latitude + ',' + origin.Longitude;
+    var destinationGeolocations = destination.Latitude + ',' + destination.Longitude;
     var key = getKey();
     var reply = HTTP.get('https://maps.googleapis.com/maps/api/distancematrix/json?',
     					{params: {'origins': originGeolocations, 'destinations': destinationGeolocations, 'key': key}});
     var result = reply;
-    if (result.STATUS === 'INVALID_REQUEST'){
+    if (result.STATUS === 'INVALID_REQUEST') {
       return 'Je shit klopt niet.';
-    }
-    else if (result.STATUS === 'MAX_ELEMENTS_EXCEEDED') {
+    } else if (result.STATUS === 'MAX_ELEMENTS_EXCEEDED') {
       return 'Deze error kan niet voorkomen. Als dat wel zo is zit je in één of andere abstracte dimensie zonder tijd ofzo.';
-    }
-    else if (result.STATUS === 'OVER_QUERY_LIMIT'){
+    } else if (result.STATUS === 'OVER_QUERY_LIMIT') {
       return 'Je hebt wel weer genoeg gequeried voor vandaag, of niet dan?';
-    }
-    else if (result.STATUS === 'REQUEST_DENIED') {
+    } else if (result.STATUS === 'REQUEST_DENIED') {
       return 'Google wil nie helpuh :(';
-    }
-    else if (result.STATUS === 'UNKNOWN_ERROR') {
+    } else if (result.STATUS === 'UNKNOWN_ERROR') {
     'Server error. We proberen het gewoon nog een keer. Hoppaaaa';
-      return getGooglesShit(origin, destination);
-    }
-    else if (result.data.status === 'NOT_FOUND') {
+      return getGoogleTravelTime(origin, destination);
+    } else if (result.data.status === 'NOT_FOUND') {
       return 'Geef even normale locaties op.';
-    }
-    else if (result.data.status === 'ZERO_RESULTS') {
+    } else if (result.data.status === 'ZERO_RESULTS') {
       return 'Er bestaat klaarblijkelijk geen route tussen die locaties. De locaties kloppen wel hoor, schat.';
-    }
-    else if (result.data.status === 'MAX_ROUTE_LENGTH_EXCEEDED') {
+    } else if (result.data.status === 'MAX_ROUTE_LENGTH_EXCEEDED') {
       return 'Ik trek die route niet joh; veels te lang!';
-    }
-    else {
+    } else {
       return result.data.rows[0].elements[0].duration.value / 60;
     }
-  }
+  };
 }

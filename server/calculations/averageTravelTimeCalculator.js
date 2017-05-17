@@ -1,4 +1,4 @@
-import { averageTravelTimes, CWReturnVehicles, truckPlanning, CWReturnVehiclePosition, customerGeolocations } from '../../lib/collections.js';
+import { CWReturnVehicles, truckPlanning, CWReturnVehiclePosition, customerGeolocations } from '../../lib/collections.js';
 import { moment } from 'meteor/momentjs:moment';
 import { Meteor } from 'meteor/meteor';
 

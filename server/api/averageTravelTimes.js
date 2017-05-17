@@ -7,17 +7,18 @@ import '../calculations/googleCalculate.js';
 
 if (Meteor.isServer) {
   Meteor.methods({
-    'average.insert' (departCode, destinationCode) {
+    'average.insert' (departObject, destinationObject) {
+      var departCode = departObject.Code;
+      var destinationCode = destinationObject.Code;
       var concatenatedCode = departCode.concat(destinationCode);
       var exists = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
-      var googleTime = getGoogleTravelTime(departCode, destinationCode);
       if (exists) {
         // still need a check on how long ago the time was calculated
         // var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
-        console.log('destinationCode: ', destinationCode);
-        console.log('departCode: ', departCode);
-        averageTravelTimes.update(exists._id, {$set: {averageTravelTime: calculatedTravelTime, editedAt: moment(new Date()).format()}});
+        // var googleTime = getGoogleTravelTime(departObject, destinationObject);
+        // averageTravelTimes.update(exists._id, {$set: {googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
       } else {
+        var googleTime = getGoogleTravelTime(departObject, destinationObject);
         // var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
         averageTravelTimes.insert({
           concatenatedCode: concatenatedCode,
