@@ -1,9 +1,11 @@
-import { averageTravelTimes, CWReturnVehicles, truckPlanning, CWReturnVehiclePosition, customerGeolocations } from '../../lib/collections.js';
+import { CWReturnVehicles, truckPlanning, CWReturnVehiclePosition, customerGeolocations } from '../../lib/collections.js';
 import { moment } from 'meteor/momentjs:moment';
 import { Meteor } from 'meteor/meteor';
 
 if (Meteor.isServer) {
-  averageTravelTimeCalculate = function (departCode, destinationCode) {
+  averageTravelTimeCalculate = function (departObject, destinationObject) {
+    var departCode = departObject.Code;
+    var destinationCode = destinationObject.Code;
     var truckPlannings = getTruckPlannings(departCode, destinationCode).fetch();
     var totalTime = 0;
     var count = 0;
@@ -23,18 +25,20 @@ if (Meteor.isServer) {
         }
         // gets the CW vehiclePositions in an array
         var vehiclePositions = getCWVehiclePostion(vehicleID, departDateTime, returnDateTime).fetch();
-        if (inRange(vehiclePositions[0].Longitude, vehiclePositions[0].Latitude, getLocation(departCode).Longitude, getLocation(departCode).Latitude)) {
-          for ( j = 0; j < vehiclePositions.length; j++) {
-      			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
-              var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
-              if(time > 5 && time < 600){
-                totalTime += time;
-                count++;
-              }
-              break;
-      			}
-          }
-    		}
+        if (vehiclePositions) {
+          if (inRange(vehiclePositions[0].Longitude, vehiclePositions[0].Latitude, getLocation(departCode).Longitude, getLocation(departCode).Latitude)) {
+            for (j = 0; j < vehiclePositions.length; j++) {
+        			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
+                var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
+                if (time > 5 && time < 600) {
+                  totalTime += time;
+                  count++;
+                }
+                break;
+        			}
+            }
+      		}
+         }
       }
     }
     return totalTime / count;
@@ -43,23 +47,52 @@ if (Meteor.isServer) {
   // get the CarrierWeb vehicle id from the license entered in Modality
   function getCWVehicleID (license) {
     var cwVehicle = CWReturnVehicles.findOne({ License: license });
+    var licensestring;
     if (cwVehicle) {
       return cwVehicle.CWVehicleID;
     } else {
+      // xx-xx-xx
+      licensestring = license.substr(0, 2) + '-' + license.substr(2, 4) + '-' + license.substr(4);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if (cwVehicle) {
+        return cwVehicle.CWVehicleID;
+      }
+
+      // xx-xxx-x
+      licensestring = license.substr(0, 2) + '-' + license.substr(2, 5) + '-' + license.substr(5);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if (cwVehicle) {
+        return cwVehicle.CWVehicleID;
+      }
+
+      // x-xxx-xx
+      licensestring = license.substr(0, 1) + '-' + license.substr(1, 4) + '-' + license.substr(4);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if (cwVehicle) {
+        return cwVehicle.CWVehicleID;
+      }
+
+      // xxx-xx-x
+      licensestring = license.substr(0, 3) + '-' + license.substr(3, 5) + '-' + license.substr(5);
+      cwVehicle = CWReturnVehicles.findOne({ License: licensestring });
+      if (cwVehicle) {
+        return cwVehicle.CWVehicleID;
+      }
       return;
     }
+
   }
 
-  function transformDateTime(numberTime, date) {
+  function transformDateTime (numberTime, date) {
     var time = numberTime.toString();
-    //console.log(typeof date, " ", date);
+    //console.log(typeof date, ' ', date);
     var newTime;
-    if(time.length == 3){
-      newTime = time.substr(0,1) + ":" + time.substr(1);
+    if (time.length === 3) {
+      newTime = time.substr(0, 1) + ':' + time.substr(1);
     } else {
-      newTime = time.substr(0,2) + ":" + time.substr(2);
+      newTime = time.substr(0, 2) + ':' + time.substr(2);
     }
-    newDateTime = moment(date + " " + newTime);
+    var newDateTime = moment(date + ' ' + newTime);
     return newDateTime;
   }
 

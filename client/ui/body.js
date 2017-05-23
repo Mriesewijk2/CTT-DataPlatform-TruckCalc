@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import { moment } from 'meteor/momentjs:moment';
 import { $ } from 'meteor/jquery';
 import { Meteor } from 'meteor/meteor';
-import { averageTravelTimes, customerGeolocations } from '../../lib/collections.js';
+import { customerGeolocations } from '../../lib/collections.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 import './body.html';
@@ -30,6 +30,12 @@ if (Meteor.isClient) {
       allowClear: true,
       placeholder: 'Select destination'
     });
+  });
+
+  Template.calculateTempl.events({
+    'click #calculate': function (e) {
+      e.preventDefault();
+    }
   });
 
   Template.addAverageTimeForm.helpers({
