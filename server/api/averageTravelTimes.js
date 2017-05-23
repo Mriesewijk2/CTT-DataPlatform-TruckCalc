@@ -15,8 +15,8 @@ if (Meteor.isServer) {
       if (exists) {
         // still need a check on how long ago the time was calculated
         var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
-        // var googleTime = getGoogleTravelTime(departObject, destinationObject);
-        averageTravelTimes.update(exists._id, {$set: {googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
+        var googleTime = getGoogleTravelTime(departObject, destinationObject);
+        averageTravelTimes.update(exists._id, {$set: {averageCalculatedTravelTime: calculatedTravelTime, googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
       } else {
         var googleTime = getGoogleTravelTime(departObject, destinationObject);
         var calculatedTravelTime = averageTravelTimeCalculate(departObject, destinationObject);
