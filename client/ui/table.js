@@ -7,7 +7,7 @@ if (Meteor.isClient) {
   // JS code for the table
   Template.body.helpers({
     settings: function () {
-      var collection = truckPlanning.find({}, { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'PlannedDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1}, sort: {'PlannedDate': -1}, limit: 200 });
+      var collection = truckPlanning.find({}, { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'NeededDepartTimeData': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       return {
         collection: tableData,
@@ -16,7 +16,8 @@ if (Meteor.isClient) {
         fields: [
           { key: 'From', label: 'From' },
           { key: 'LoadDisch', label: 'To' },
-          { key: 'PlannedDepartTime', label: 'Planned Depart Time' },
+          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google' },
+          { key: 'PlannedDepartTimeData', label: 'Planned Depart Time Data' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
           { key: 'calculate', label: 'calculate', tmpl: Template.calculateTempl}
         ]
@@ -34,19 +35,22 @@ if (Meteor.isClient) {
         if (order.From && order.LoadDisch && order.PlannedArrivalTime) {
           var concatenatedCode = order.From.concat(order.LoadDisch);
           var neededDepartTimeGoogle = order.NeededDepartTimeGoogle;
+          var neededDepartTimeData = order.NeededDepartTimeData;
           // combine the time and date to a datetime
           var plannedArrivalTime = arrivalTimeTransform(order.PlannedArrivalTime, order.PlannedDate).format();
-          if(!neededDepartTimeGoogle) {
+          if(!neededDepartTimeGoogle && !neededDepartTimeData) {
             Meteor.call('truckPlanning.calculate', order._id);
             // refresh the neededDepartTimeGoogle data
             neededDepartTimeGoogle = truckPlanning.findOne({_id: order._id}, {fields: {'NeededDepartTimeGoogle': 1}}).NeededDepartTimeGoogle;
+            neededDepartTimeData = truckPlanning.findOne({_id: order._id}, {fields: {'NeededDepartTimeData': 1}}).NeededDepartTimeData;
           }
             result.push({
               _id : order._id,
               concatenatedCode: concatenatedCode,
               From: order.From,
               LoadDisch: order.LoadDisch,
-              PlannedDepartTime: neededDepartTimeGoogle,
+              PlannedDepartTimeData: neededDepartTimeData,
+              PlannedDepartTimeGoogle: neededDepartTimeGoogle,
               PlannedArrivalTime: plannedArrivalTime,
               To: order.To
             });
@@ -64,7 +68,7 @@ if (Meteor.isClient) {
     } else {
       newTime = time.substr(0, 2) + ':' + time.substr(2);
     }
-    newDateTime = moment(arrivalDate + ' ' + newTime);
+    var newDateTime = moment(arrivalDate + ' ' + newTime);
     return newDateTime;
   }
 }
