@@ -6,8 +6,12 @@ import './apiKeys.js';
 
 if (Meteor.isServer) {
   getGoogleTravelTime = function (origin, destination) {
-    var originGeolocations = origin.Latitude + ',' + origin.Longitude;
-    var destinationGeolocations = destination.Latitude + ',' + destination.Longitude;
+    if (origin && destination) {
+      var originGeolocations = origin.Latitude + ',' + origin.Longitude;
+      var destinationGeolocations = destination.Latitude + ',' + destination.Longitude;
+    } else {
+      return 'No origin or destination found';
+    }
     var key = getKey();
     var reply = HTTP.get('https://maps.googleapis.com/maps/api/distancematrix/json?',
     					{params: {'origins': originGeolocations, 'destinations': destinationGeolocations, 'key': key}});

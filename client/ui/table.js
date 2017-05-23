@@ -13,10 +13,14 @@ if (Meteor.isClient) {
         collection: tableData,
         rowsPerPage: 10,
         showFilter: true,
-        rowClass: function(item){
-          var css = 'success';
-          if (item.LoadDisch === 'VISSAL'){
+        rowClass: function(item) {
+          var css = '';
+          var currentTime = moment();
+          var departTime = item.PlannedDepartTimeGoogle;
+          if (currentTime.diff(departTime, 'minutes') < 10) {
             css = 'danger';
+          } else if (currentTime.diff(departTime, 'minutes') < 5) {
+            css = 'error';
           }
           return css;
         },
