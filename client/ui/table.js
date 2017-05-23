@@ -15,7 +15,7 @@ if (Meteor.isClient) {
         showFilter: true,
         rowClass: function(item){
           var css = 'success';
-          if (item.LoadDisch === 'ZETOEN'){
+          if (item.LoadDisch === 'VISSAL'){
             css = 'danger';
           }
           return css;

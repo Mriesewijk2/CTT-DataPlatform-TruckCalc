@@ -3,7 +3,7 @@ import { truckPlanning, averageTravelTimes, customerGeolocations } from '../../l
 import { moment } from 'meteor/momentjs:moment';
 
 if (Meteor.isServer) {
-  // wait for collectiosn to be loaded
+  // wait for collection to be loaded
   var planning = truckPlanning;
   Meteor.methods({
     'truckPlanning.calculate' (id) {
@@ -41,13 +41,15 @@ if (Meteor.isServer) {
 
       var arrivalDateTime = arrivalTimeTransform(truckPlanning.PlannedArrivalTime, truckPlanning.PlannedDate);
       // multiply by 1.2 for truck travel time
-      if (!averageTime) {
+      if (averageTime) {
         var googleTruckTravelTime = averageTime.googleTravelTime * 1.2;
         var neededDepartTimeGoogle = arrivalDateTime.subtract(googleTruckTravelTime, 'minutes').format();
         if (averageTime.averageCalculatedTravelTime) {
           var neededDepartTimeData = arrivalDateTime.subtract(averageTime.averageCalculatedTravelTime, 'minutes').format();
         }
         planning.update(truckPlanning._id, {$set: {NeededDepartTimeData: neededDepartTimeData, NeededDepartTimeGoogle: neededDepartTimeGoogle}});
+      } else {
+        planning.update(truckPlanning._id, {$set: {NeededDepartTimeData: 'Could not be calculated', NeededDepartTimeGoogle: 'Could not be calculated'}});
       }
     }
   });
