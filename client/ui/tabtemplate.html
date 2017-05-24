@@ -17,18 +17,10 @@
     {{/tabContent}}
 
     {{#tabContent slug="places"}}
-      <h2>Places</h2>
-      <button class="add-places">
-        Add Places
-      </button>
+      {{> reactiveTable class="table table-bordered table-hover" settings=settings2}}
     {{/tabContent}}
 
-    {{#tabContent slug="things"}}
-      <h2>Things</h2>
-      <button class="add-things">
-        Add Things
-      </button>
-    {{/tabContent}}
+
 
   {{/basicTabs}}
 

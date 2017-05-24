@@ -34,8 +34,40 @@ if (Meteor.isClient) {
           { key: 'calculate', label: 'calculate', tmpl: Template.calculateTempl}
         ]
       };
+    },
+
+    settings2: function () {
+
+      var collection = truckPlanning.find({}, { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'NeededDepartTimeData': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var tableData = getTableData(collection);
+      return {
+        collection: tableData,
+        rowsPerPage: 10,
+        showFilter: true,
+        rowClass: function(item) {
+          var css = '';
+          var currentTime = moment();
+          var departTime = item.PlannedDepartTimeGoogle;
+          if (currentTime.diff(departTime, 'minutes') < 10) {
+            css = 'danger';
+          } else if (currentTime.diff(departTime, 'minutes') < 5) {
+            css = 'error';
+          }
+          return css;
+        },
+        fields: [
+          { key: 'From', label: 'a' },
+          { key: 'LoadDisch', label: 'b' },
+          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google' },
+          { key: 'PlannedDepartTimeData', label: 'Planned Depart Time Data' },
+          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
+          { key: 'calculate', label: 'calculate', tmpl: Template.calculateTempl}
+        ]
+      };
     }
   });
+
+
 
 // add a geolocation to the traveltime entry ( connecting customerabreviation to geolocation
 // in a different collection)
