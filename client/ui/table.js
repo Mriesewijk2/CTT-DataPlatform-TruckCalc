@@ -1,12 +1,13 @@
 import { Template } from 'meteor/templating';
 import { Meteor } from 'meteor/meteor';
 import { moment } from 'meteor/momentjs:moment';
-import { averageTravelTimes, truckPlanning } from '../../lib/collections.js';
+import { averageTravelTimes, truckPlanning } from '../../lib/collections.js'
 
 if (Meteor.isClient) {
   // JS code for the table
-  Template.body.helpers({
+  Template.tabtemplate.helpers({
     settings: function () {
+
       var collection = truckPlanning.find({}, { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'NeededDepartTimeData': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       return {
