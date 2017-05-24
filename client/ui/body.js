@@ -7,48 +7,17 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 
 import './body.html';
 import './table.js';
-import './addAverageTimeForm.html';
 import '../subscriptions.js';
 
 if (Meteor.isClient) {
   Template.body.onCreated(function bodyOnCreated () {
     this.state = new ReactiveDict();
   });
-
-  Template.body.helpers({
-    averages () {
-      return averageTravelTimes.find({});
-    }
-  });
-
-  Template.addAverageTimeForm.onRendered(function () {
-    $('#departCode').select2({
-      allowClear: true,
-      placeholder: 'Select departure location'
-    });
-    $('#destinationCode').select2({
-      allowClear: true,
-      placeholder: 'Select destination'
-    });
-  });
-
-  Template.calculateTempl.events({
-    'click #calculate': function (e) {
-      e.preventDefault();
-    }
-  });
-
-  Template.addAverageTimeForm.helpers({
-    locations: function () {
-      return customerGeolocations.find({}, {fields: {'Code': 1}});
-    }
-  });
-
-  Template.addAverageTimeForm.events({
-    'submit form': function (event) {
-      event.preventDefault();
-      var target = event.target;
-      Meteor.call('average.insert', target.departCode.value, target.destinationCode.value);
+  Template.departedTmpl.events({
+    'click .toggle-checked' () {
+      console.log('trigger', this._id);
+      Meteor.call('set.done', this._id);
+      console.log('trigger2', this._id);
     }
   });
 }

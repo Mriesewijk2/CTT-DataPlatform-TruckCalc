@@ -3,14 +3,6 @@
   <h1>  <p class="text-center">Truck Order List</p></h1>
   </header>
   <div class="container">
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-      Calculate new average time
-    </button>
-    <div class="collapse" id="collapseExample">
-      <div class="well">
-        {{> addAverageTimeForm }}
-      </div>
+      {{> reactiveTable class="table table-bordered table-hover" settings=settings}}
   </div>
-{{> reactiveTable class="table table-bordered table-hover" settings=settings}}
-</div>
 </body>

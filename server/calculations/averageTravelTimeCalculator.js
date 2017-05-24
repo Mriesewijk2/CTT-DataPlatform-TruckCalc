@@ -25,8 +25,9 @@ if (Meteor.isServer) {
         }
         // gets the CW vehiclePositions in an array
         var vehiclePositions = getCWVehiclePostion(vehicleID, departDateTime, returnDateTime).fetch();
-        if (vehiclePositions) {
-          if (inRange(vehiclePositions[0].Longitude, vehiclePositions[0].Latitude, getLocation(departCode).Longitude, getLocation(departCode).Latitude)) {
+        var depart = getLocation(departCode);
+        if (vehiclePositions && depart && destination) {
+          if (inRange(vehiclePositions[0].Longitude, vehiclePositions[0].Latitude, depart.Longitude, depart.Latitude)) {
             for (j = 0; j < vehiclePositions.length; j++) {
         			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
                 var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
@@ -38,7 +39,7 @@ if (Meteor.isServer) {
         			}
             }
       		}
-         }
+        }
       }
     }
     return totalTime / count;

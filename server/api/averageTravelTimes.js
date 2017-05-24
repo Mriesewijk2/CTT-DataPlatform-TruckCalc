@@ -26,7 +26,7 @@ if (Meteor.isServer) {
           concatenatedCode: concatenatedCode,
           departCode: departCode,
           destinationCode: destinationCode,
-          averageCalculatedTravelTime: 12,
+          averageCalculatedTravelTime: calculatedTravelTime,
           googleTravelTime: googleTime,
           createdAt: moment(new Date()).format(),
           editedAt: moment(new Date()).format()

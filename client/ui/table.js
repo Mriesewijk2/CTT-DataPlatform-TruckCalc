@@ -7,19 +7,22 @@ if (Meteor.isClient) {
   // JS code for the table
   Template.body.helpers({
     settings: function () {
-      var collection = truckPlanning.find({}, { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'NeededDepartTimeData': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var collection = truckPlanning.find({departed: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'NeededDepartTimeData': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
+      var currentTime = moment();
       return {
         collection: tableData,
-        rowsPerPage: 10,
+        rowsPerPage: 20,
         showFilter: true,
-        rowClass: function(item) {
-          var css = '';
-          var currentTime = moment();
-          var departTime = item.PlannedDepartTimeGoogle;
-          if (currentTime.diff(departTime, 'minutes') < 10) {
+        rowClass: function (item) {
+          var css = 'success';
+          var departTime = moment(item.time);
+          var diff = departTime.diff(currentTime, 'minutes');
+          console.log(diff);
+          if (diff < 10) {
             css = 'danger';
-          } else if (currentTime.diff(departTime, 'minutes') < 5) {
+          } else if (diff < 5) {
             css = 'error';
           }
           return css;
@@ -27,23 +30,20 @@ if (Meteor.isClient) {
         fields: [
           { key: 'From', label: 'From' },
           { key: 'LoadDisch', label: 'To' },
-          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google' },
+          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedDepartTimeData', label: 'Planned Depart Time Data' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'calculate', label: 'calculate', tmpl: Template.calculateTempl}
+          { key: 'Departed', label: 'Departed', tmpl: Template.departedTmpl}
         ]
       };
     }
   });
 
-// add a geolocation to the traveltime entry ( connecting customerabreviation to geolocation
-// in a different collection)
   function getTableData (collection) {
     var array = collection.fetch();
     var result = [];
       for (var i = 0; i < array.length; i++) {
         var order = array[i];
-        if (order.From && order.LoadDisch && order.PlannedArrivalTime) {
           var concatenatedCode = order.From.concat(order.LoadDisch);
           var neededDepartTimeGoogle = order.NeededDepartTimeGoogle;
           var neededDepartTimeData = order.NeededDepartTimeData;
@@ -60,12 +60,13 @@ if (Meteor.isClient) {
               concatenatedCode: concatenatedCode,
               From: order.From,
               LoadDisch: order.LoadDisch,
-              PlannedDepartTimeData: neededDepartTimeData,
-              PlannedDepartTimeGoogle: neededDepartTimeGoogle,
-              PlannedArrivalTime: plannedArrivalTime,
-              To: order.To
+              PlannedDepartTimeData: moment(neededDepartTimeData).format('DD/MM/YYYY hh:mm'),
+              time: neededDepartTimeGoogle,
+              PlannedDepartTimeGoogle: moment(neededDepartTimeGoogle).format('DD/MM/YYYY hh:mm'),
+              PlannedArrivalTime: moment(plannedArrivalTime).format('DD/MM/YYYY hh:mm'),
+              To: order.To,
+              Departed: order.departed
             });
-        }
       }
       return result;
   }

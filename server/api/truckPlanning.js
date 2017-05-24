@@ -12,7 +12,7 @@ if (Meteor.isServer) {
       var averageTime = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
       var departObject = customerGeolocations.findOne({Code: truckPlanning.From});
       var destinationObject = customerGeolocations.findOne({Code: truckPlanning.LoadDisch});
-      if (!averageTime) {
+      if (!averageTime || moment(averageTime.editedAt).diff(moment(), 'days') > 7) {
         if (departObject && destinationObject) {
           Meteor.call('average.insert', departObject, destinationObject);
           // wait for findOne to return
@@ -51,6 +51,11 @@ if (Meteor.isServer) {
       } else {
         planning.update(truckPlanning._id, {$set: {NeededDepartTimeData: 'Could not be calculated', NeededDepartTimeGoogle: 'Could not be calculated'}});
       }
+    },
+
+    'set.done' (id) {
+      console.log('trigger');
+      truckPlanning.update(id, {$set: {departed: true}});
     }
   });
 
