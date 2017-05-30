@@ -12,6 +12,7 @@ if (Meteor.isServer) {
     var i;
     var j;
     for (i = 0; i < truckPlannings.length; i++) {
+      console.log(i);
       // get the CWVehicleID from the specific id in the truckplanning
       var vehicleID = getCWVehicleID(truckPlannings[i].Truck);
       // get the customerGeolocations record for a specific destinationCode
@@ -27,18 +28,24 @@ if (Meteor.isServer) {
         var vehiclePositions = getCWVehiclePostion(vehicleID, departDateTime, returnDateTime).fetch();
         var depart = getLocation(departCode);
         if (vehiclePositions && depart && destination) {
-          if (inRange(vehiclePositions[0].Longitude, vehiclePositions[0].Latitude, depart.Longitude, depart.Latitude)) {
-            for (j = 0; j < vehiclePositions.length; j++) {
-        			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
-                var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
-                if (time > 5 && time < 600) {
-                  totalTime += time;
-                  count++;
-                }
-                break;
-        			}
-            }
-      		}
+          if (vehiclePositions.length > 0) {
+            if (inRange(vehiclePositions[0].Longitude, vehiclePositions[0].Latitude, depart.Longitude, depart.Latitude)) {
+              console.log('start found');
+              for (j = 0; j < vehiclePositions.length; j++) {
+                console.log(j, ' ',vehiclePositions.length);
+          			 if (inRange(vehiclePositions[j].Longitude, vehiclePositions[j].Latitude, destination.Longitude, destination.Latitude)) {
+                  console.log('true', j);
+                  var time = moment.duration(moment(vehiclePositions[j].ReceivedTime).diff(departDateTime)).asMinutes();
+                  console.log('time: ', time);
+                  if (time > 5 && time < 600) {
+                    totalTime += time;
+                    count++;
+                  }
+                  break;
+          			}
+              }
+        		}
+          }
         }
       }
     }

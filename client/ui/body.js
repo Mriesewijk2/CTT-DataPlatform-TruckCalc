@@ -13,6 +13,7 @@ if (Meteor.isClient) {
   Template.body.onCreated(function bodyOnCreated () {
     this.state = new ReactiveDict();
   });
+
   Template.departedTmpl.events({
     'click .toggle-checked' () {
       console.log('trigger', this._id);

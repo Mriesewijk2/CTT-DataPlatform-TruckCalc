@@ -50,6 +50,7 @@ if (Meteor.isClient) {
           // combine the time and date to a datetime
           var plannedArrivalTime = arrivalTimeTransform(order.PlannedArrivalTime, order.PlannedDate).format();
           if(!neededDepartTimeGoogle && !neededDepartTimeData) {
+            console.log('triggerCalculate');
             Meteor.call('truckPlanning.calculate', order._id);
             // refresh the neededDepartTimeGoogle data
             neededDepartTimeGoogle = truckPlanning.findOne({_id: order._id}, {fields: {'NeededDepartTimeGoogle': 1}}).NeededDepartTimeGoogle;

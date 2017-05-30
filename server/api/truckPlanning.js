@@ -6,9 +6,15 @@ if (Meteor.isServer) {
   // wait for collection to be loaded
   var planning = truckPlanning;
   Meteor.methods({
+    'set.done' (id) {
+      console.log('trigger');
+      truckPlanning.update(id, {$set: {departed: true}});
+    },
     'truckPlanning.calculate' (id) {
+      console.log(id);
       var truckPlanning = planning.findOne({'_id': id});
       var concatenatedCode = truckPlanning.From.concat(truckPlanning.LoadDisch);
+      console.log(concatenatedCode);
       var averageTime = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
       var departObject = customerGeolocations.findOne({Code: truckPlanning.From});
       var destinationObject = customerGeolocations.findOne({Code: truckPlanning.LoadDisch});
@@ -45,17 +51,13 @@ if (Meteor.isServer) {
         var googleTruckTravelTime = averageTime.googleTravelTime * 1.2;
         var neededDepartTimeGoogle = arrivalDateTime.subtract(googleTruckTravelTime, 'minutes').format();
         if (averageTime.averageCalculatedTravelTime) {
+          arrivalDateTime = arrivalTimeTransform(truckPlanning.PlannedArrivalTime, truckPlanning.PlannedDate);
           var neededDepartTimeData = arrivalDateTime.subtract(averageTime.averageCalculatedTravelTime, 'minutes').format();
         }
         planning.update(truckPlanning._id, {$set: {NeededDepartTimeData: neededDepartTimeData, NeededDepartTimeGoogle: neededDepartTimeGoogle}});
       } else {
         planning.update(truckPlanning._id, {$set: {NeededDepartTimeData: 'Could not be calculated', NeededDepartTimeGoogle: 'Could not be calculated'}});
       }
-    },
-
-    'set.done' (id) {
-      console.log('trigger');
-      truckPlanning.update(id, {$set: {departed: true}});
     }
   });
 
