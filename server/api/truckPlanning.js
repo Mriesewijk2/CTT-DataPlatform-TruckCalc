@@ -7,12 +7,10 @@ if (Meteor.isServer) {
   var planning = truckPlanning;
   Meteor.methods({
     'set.done' (id) {
-      console.log('trigger');
       truckPlanning.update(id, {$set: {departed: true}});
 
     },
     'truckPlanning.calculate' (id) {
-      console.log('trigger');
       var truckPlanning = planning.findOne({'_id': id});
       var concatenatedCode = truckPlanning.From.concat(truckPlanning.LoadDisch);
       var averageTime = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
