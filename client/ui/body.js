@@ -4,10 +4,10 @@ import { $ } from 'meteor/jquery';
 import { Meteor } from 'meteor/meteor';
 import { customerGeolocations } from '../../lib/collections.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
+//import {ReactiveTabs} from 'meteor/templates:tabs';
 
 import './body.html';
 import './table.js';
-import './addAverageTimeForm.html';
 import '../subscriptions.js';
 
 if (Meteor.isClient) {
@@ -15,40 +15,47 @@ if (Meteor.isClient) {
     this.state = new ReactiveDict();
   });
 
-  Template.body.helpers({
-    averages () {
-      return averageTravelTimes.find({});
+  Template.departedTmpl.events({
+    'click .toggle-checked' () {
+      console.log('trigger', this._id);
+      Meteor.call('set.done', this._id);
+      console.log('trigger2', this._id);
     }
   });
 
-  Template.addAverageTimeForm.onRendered(function () {
-    $('#departCode').select2({
-      allowClear: true,
-      placeholder: 'Select departure location'
-    });
-    $('#destinationCode').select2({
-      allowClear: true,
-      placeholder: 'Select destination'
-    });
-  });
+  ReactiveTabs.createInterface({
+  template: 'basicTabs',
+  onChange: function (slug, template) {
+    // This callback runs every time a tab changes.
+    // The `template` instance is unique per {{#basicTabs}} block.
+    console.log('[tabs] Tab has changed! Current tab:', slug);
+    console.log('[tabs] Template instance calling onChange:', template);
+  }
+});
 
-  Template.calculateTempl.events({
-    'click #calculate': function (e) {
-      e.preventDefault();
-    }
-  });
+  Template.tabtemplate.helpers({
+  tabs: function () {
+    // Every tab object MUST have a name and a slug!
+    return [
+      { name: 'People', slug: 'people' },
+      { name: 'Places', slug: 'places' },
+      { name: 'Things', slug: 'things', onRender: function(slug, template) {
+        // This callback runs every time this specific tab's content renders.
+        // As with `onChange`, the `template` instance is unique per block helper.
+        alert("[tabs] Things has been rendered!");
+      }}
+    ];
+  },
+  activeTab: function () {
+    // Use this optional helper to reactively set the active tab.
+    // All you have to do is return the slug of the tab.
 
-  Template.addAverageTimeForm.helpers({
-    locations: function () {
-      return customerGeolocations.find({}, {fields: {'Code': 1}});
-    }
-  });
+    // You can set this using an Iron Router param if you want--
+    // or a Session variable, or any reactive value from anywhere.
 
-  Template.addAverageTimeForm.events({
-    'submit form': function (event) {
-      event.preventDefault();
-      var target = event.target;
-      Meteor.call('average.insert', target.departCode.value, target.destinationCode.value);
-    }
-  });
+    // If you don't provide an active tab, the first one is selected by default.
+    // See the `advanced use` section below to learn about dynamic tabs.
+    return Session.get('activeTab'); // Returns "people", "places", or "things".
+  }
+});
 }

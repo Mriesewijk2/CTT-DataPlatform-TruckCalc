@@ -13,20 +13,20 @@ if (Meteor.isServer) {
       var concatenatedCode = departCode.concat(destinationCode);
       var exists = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
       if (exists) {
-        // still need a check on how long ago the time was calculated
-        var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
-        var googleTime = getGoogleTravelTime(departObject, destinationObject);
-        averageTravelTimes.update(exists._id, {$set: {averageCalculatedTravelTime: calculatedTravelTime, googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
-        console.log(calculatedTravelTime);
+        // checks when the averagetime was last edited.
+        if (moment().subtract(moment(exists.editedAt), 'days') > 7) {
+          // the algorithm will not be used atm due to inaccuracies and
+          // var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
+          var googleTime = getGoogleTravelTime(departObject, destinationObject);
+          averageTravelTimes.update(exists._id, {$set: {googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
+        }
       } else {
         var googleTime = getGoogleTravelTime(departObject, destinationObject);
-        var calculatedTravelTime = averageTravelTimeCalculate(departObject, destinationObject);
-        console.log(calculatedTravelTime);
+        // var calculatedTravelTime = averageTravelTimeCalculate(departObject, destinationObject);
         averageTravelTimes.insert({
           concatenatedCode: concatenatedCode,
           departCode: departCode,
           destinationCode: destinationCode,
-          averageCalculatedTravelTime: 12,
           googleTravelTime: googleTime,
           createdAt: moment(new Date()).format(),
           editedAt: moment(new Date()).format()

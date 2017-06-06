@@ -21,7 +21,6 @@ if (Meteor.isServer) {
     } else if (result.STATUS === 'MAX_ELEMENTS_EXCEEDED') {
       return 'Deze error kan niet voorkomen. Als dat wel zo is zit je in één of andere abstracte dimensie zonder tijd ofzo.';
     } else if (result.STATUS === 'OVER_QUERY_LIMIT') {
-      console.log('Je hebt wel weer genoeg gequeried voor vandaag, of niet dan?');
       return 'Je hebt wel weer genoeg gequeried voor vandaag, of niet dan?';
     } else if (result.STATUS === 'REQUEST_DENIED') {
       return 'Google wil nie helpuh :(';
