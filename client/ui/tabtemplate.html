@@ -12,24 +12,13 @@
          `{{#tabContent slug="nameOfSlug"}} ... {{/tabContent}}`
          These can be defined in any order you like.
     -->
-    {{#tabContent slug="people"}}
-      {{> reactiveTable class="table table-bordered table-hover" settings=settings}}
+    {{#tabContent slug="Upcoming"}}
+      {{> reactiveTable class="table table-bordered table-hover" settings=Upcoming}}
     {{/tabContent}}
 
-    {{#tabContent slug="places"}}
-      <h2>Places</h2>
-      <button class="add-places">
-        Add Places
-      </button>
+    {{#tabContent slug="Planned"}}
+      {{> reactiveTable class="table table-bordered table-hover" settings=Planned}}
     {{/tabContent}}
-
-    {{#tabContent slug="things"}}
-      <h2>Things</h2>
-      <button class="add-things">
-        Add Things
-      </button>
-    {{/tabContent}}
-
   {{/basicTabs}}
 
 </template>

@@ -6,7 +6,7 @@ import { averageTravelTimes, truckPlanning } from '../../lib/collections.js'
 if (Meteor.isClient) {
   // JS code for the table
   Template.tabtemplate.helpers({
-    settings: function () {
+    Upcoming: function () {
       var collection = truckPlanning.find({departed: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
       { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
@@ -31,7 +31,23 @@ if (Meteor.isClient) {
           { key: 'LoadDisch', label: 'To' },
           { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Departed', label: 'Departed', tmpl: Template.departedTmpl}
+          { key: 'Planned', label: 'Planned', tmpl: Template.departedTmpl}
+        ]
+      };
+    },
+    Planned: function () {
+      var collection = truckPlanning.find({departed: true, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var tableData = getTableData(collection);
+      return {
+        collection: tableData,
+        rowsPerPage: 20,
+        showFilter: true,
+        fields: [
+          { key: 'From', label: 'From' },
+          { key: 'LoadDisch', label: 'To' },
+          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
+          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' }
         ]
       };
     }
@@ -60,7 +76,7 @@ if (Meteor.isClient) {
               PlannedDepartTimeGoogle: moment(neededDepartTimeGoogle).format('DD/MM/YYYY hh:mm'),
               PlannedArrivalTime: moment(plannedArrivalTime).format('DD/MM/YYYY hh:mm'),
               To: order.To,
-              Departed: order.departed
+              Planned: order.departed
             });
       }
       return result;
