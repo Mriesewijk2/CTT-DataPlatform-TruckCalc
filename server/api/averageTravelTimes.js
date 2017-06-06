@@ -8,28 +8,25 @@ import '../calculations/googleCalculate.js';
 if (Meteor.isServer) {
   Meteor.methods({
     'average.insert' (departObject, destinationObject) {
-      console.log(departObject.Code);
       var departCode = departObject.Code;
       var destinationCode = destinationObject.Code;
       var concatenatedCode = departCode.concat(destinationCode);
       var exists = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
       if (exists) {
         // checks when the averagetime was last edited.
-        if (moment().substract(moment(exists.editedAt), 'days') > 7) {
-          var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
+        if (moment().subtract(moment(exists.editedAt), 'days') > 7) {
+          // the algorithm will not be used atm due to inaccuracies and
+          // var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
           var googleTime = getGoogleTravelTime(departObject, destinationObject);
-          averageTravelTimes.update(exists._id, {$set: {averageCalculatedTravelTime: calculatedTravelTime, googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
-          console.log(calculatedTravelTime);
+          averageTravelTimes.update(exists._id, {$set: {googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
         }
       } else {
         var googleTime = getGoogleTravelTime(departObject, destinationObject);
-        var calculatedTravelTime = averageTravelTimeCalculate(departObject, destinationObject);
-        console.log(calculatedTravelTime);
+        // var calculatedTravelTime = averageTravelTimeCalculate(departObject, destinationObject);
         averageTravelTimes.insert({
           concatenatedCode: concatenatedCode,
           departCode: departCode,
           destinationCode: destinationCode,
-          averageCalculatedTravelTime: calculatedTravelTime,
           googleTravelTime: googleTime,
           createdAt: moment(new Date()).format(),
           editedAt: moment(new Date()).format()
