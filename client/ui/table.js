@@ -7,7 +7,7 @@ if (Meteor.isClient) {
   // JS code for the table
   Template.tabtemplate.helpers({
     Upcoming: function () {
-      var collection = truckPlanning.find({departed: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
+      var collection = truckPlanning.find({departed: {$ne: ''}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
       { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       var currentTime = moment();
@@ -19,10 +19,22 @@ if (Meteor.isClient) {
           var css = 'success';
           var departTime = moment(item.time);
           var diff = departTime.diff(currentTime, 'minutes');
+          var dep = item.Planned;
+
+          console.log(dep);
+          if(dep == true){
+            console.log('trigger')
+            css = 'success';
+            alert('asdfasdf');
+          }
           if (diff < 10) {
             css = 'danger';
           } else if (diff < 5) {
             css = 'error';
+          }
+          if(dep == true){
+            console.log('trigger')
+            css = 'success';
           }
           return css;
         },
