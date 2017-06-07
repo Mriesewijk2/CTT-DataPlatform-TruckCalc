@@ -15,11 +15,25 @@ if (Meteor.isClient) {
     this.state = new ReactiveDict();
   });
 
+  Template.upcomingTmpl.events({
+    'click #plannedtrue' () {
+      Meteor.call('set.plannedtrue', this._id);
+    }
+  });
+
+  Template.plannedTmpl.events({
+    'click #plannedfalse' () {
+      Meteor.call('set.plannedfalse', this._id);
+    },
+    'click #departedtrue' () {
+      Meteor.call('set.departedtrue', this._id);
+    }
+
+  });
+
   Template.departedTmpl.events({
-    'click .toggle-checked' () {
-      console.log('trigger', this._id);
-      Meteor.call('set.done', this._id);
-      console.log('trigger2', this._id);
+    'click #departedfalse' () {
+      Meteor.call('set.departedfalse', this._id);
     }
   });
 
@@ -28,8 +42,6 @@ if (Meteor.isClient) {
   onChange: function (slug, template) {
     // This callback runs every time a tab changes.
     // The `template` instance is unique per {{#basicTabs}} block.
-    console.log('[tabs] Tab has changed! Current tab:', slug);
-    console.log('[tabs] Template instance calling onChange:', template);
   }
 });
 
@@ -37,13 +49,9 @@ if (Meteor.isClient) {
   tabs: function () {
     // Every tab object MUST have a name and a slug!
     return [
-      { name: 'People', slug: 'people' },
-      { name: 'Places', slug: 'places' },
-      { name: 'Things', slug: 'things', onRender: function(slug, template) {
-        // This callback runs every time this specific tab's content renders.
-        // As with `onChange`, the `template` instance is unique per block helper.
-        alert("[tabs] Things has been rendered!");
-      }}
+      { name: 'Upcoming', slug: 'Upcoming' },
+      { name: 'Planned', slug: 'Planned' },
+      { name: 'Departed', slug: 'Departed'}
     ];
   },
   activeTab: function () {

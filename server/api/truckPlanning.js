@@ -6,13 +6,19 @@ if (Meteor.isServer) {
   // wait for collection to be loaded
   var planning = truckPlanning;
   Meteor.methods({
-    'set.done' (id) {
-      console.log('trigger');
-      truckPlanning.update(id, {$set: {departed: true}});
-
+    'set.plannedtrue' (id) {
+      truckPlanning.update(id, {$set: {Planned: true}});
+    },
+    'set.plannedfalse' (id) {
+      truckPlanning.update(id, {$set: {Planned: false}});
+    },
+    'set.departedtrue' (id) {
+      truckPlanning.update(id, {$set: {Departed: true}});
+    },
+    'set.departedfalse' (id) {
+      truckPlanning.update(id, {$set: {Departed: false}});
     },
     'truckPlanning.calculate' (id) {
-      console.log('trigger');
       var truckPlanning = planning.findOne({'_id': id});
       var concatenatedCode = truckPlanning.From.concat(truckPlanning.LoadDisch);
       var averageTime = averageTravelTimes.findOne({concatenatedCode: concatenatedCode});
