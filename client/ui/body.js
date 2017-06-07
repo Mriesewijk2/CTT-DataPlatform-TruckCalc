@@ -15,9 +15,25 @@ if (Meteor.isClient) {
     this.state = new ReactiveDict();
   });
 
+  Template.upcomingTmpl.events({
+    'click #plannedtrue' () {
+      Meteor.call('set.plannedtrue', this._id);
+    }
+  });
+
+  Template.plannedTmpl.events({
+    'click #plannedfalse' () {
+      Meteor.call('set.plannedfalse', this._id);
+    },
+    'click #departedtrue' () {
+      Meteor.call('set.departedtrue', this._id);
+    }
+
+  });
+
   Template.departedTmpl.events({
-    'click .toggle-checked' () {
-      Meteor.call('set.done', this._id);
+    'click #departedfalse' () {
+      Meteor.call('set.departedfalse', this._id);
     }
   });
 
@@ -35,6 +51,7 @@ if (Meteor.isClient) {
     return [
       { name: 'Upcoming', slug: 'Upcoming' },
       { name: 'Planned', slug: 'Planned' },
+      { name: 'Departed', slug: 'Departed'}
     ];
   },
   activeTab: function () {

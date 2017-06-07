@@ -7,8 +7,8 @@ if (Meteor.isClient) {
   // JS code for the table
   Template.tabtemplate.helpers({
     Upcoming: function () {
-      var collection = truckPlanning.find({departed: {$ne: ''}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
-      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var collection = truckPlanning.find({Planned: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Planned': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       var currentTime = moment();
       return {
@@ -19,22 +19,10 @@ if (Meteor.isClient) {
           var css = 'success';
           var departTime = moment(item.time);
           var diff = departTime.diff(currentTime, 'minutes');
-          var dep = item.Planned;
-
-          console.log(dep);
-          if(dep == true){
-            console.log('trigger')
-            css = 'success';
-            alert('asdfasdf');
-          }
           if (diff < 10) {
             css = 'danger';
           } else if (diff < 5) {
             css = 'error';
-          }
-          if(dep == true){
-            console.log('trigger')
-            css = 'success';
           }
           return css;
         },
@@ -43,12 +31,12 @@ if (Meteor.isClient) {
           { key: 'LoadDisch', label: 'To' },
           { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Planned', label: 'Planned', tmpl: Template.departedTmpl}
+          { key: 'Planned', label: 'Planned', tmpl: Template.upcomingTmpl}
         ]
       };
     },
     Planned: function () {
-      var collection = truckPlanning.find({departed: true, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
+      var collection = truckPlanning.find({Planned: true, Departed: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
       { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       return {
@@ -59,7 +47,26 @@ if (Meteor.isClient) {
           { key: 'From', label: 'From' },
           { key: 'LoadDisch', label: 'To' },
           { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
-          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' }
+          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
+          { key: 'Departed', label: 'Departed / Cancel', tmpl: Template.plannedTmpl}
+        ]
+      };
+    },
+
+    Departed: function () {
+      var collection = truckPlanning.find({Planned: true, Departed: true, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var tableData = getTableData(collection);
+      return {
+        collection: tableData,
+        rowsPerPage: 20,
+        showFilter: true,
+        fields: [
+          { key: 'From', label: 'From' },
+          { key: 'LoadDisch', label: 'To' },
+          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
+          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
+          { key: 'Departed', label: 'Cancel', tmpl: Template.departedTmpl}
         ]
       };
     }
@@ -88,7 +95,9 @@ if (Meteor.isClient) {
               PlannedDepartTimeGoogle: moment(neededDepartTimeGoogle).format('DD/MM/YYYY hh:mm'),
               PlannedArrivalTime: moment(plannedArrivalTime).format('DD/MM/YYYY hh:mm'),
               To: order.To,
-              Planned: order.departed
+              Planned: order.Planned,
+              Departed: order.Departed
+
             });
       }
       return result;
