@@ -8,8 +8,8 @@ if (Meteor.isClient) {
   Template.tabtemplate.helpers({
     Upcoming: function () {
       var collection = truckPlanning.find({Planned: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
-      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Planned': 1}, limit: 100, sort: {'PlannedDate': -1} });
-      var tableData = getTableData(collection);
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Planned': 1, 'Distance': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var tableData = getTableData(collection, 'UpcomingKmCount');
       var currentTime = moment();
       return {
         collection: tableData,
@@ -31,14 +31,15 @@ if (Meteor.isClient) {
           { key: 'LoadDisch', label: 'To' },
           { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Planned', label: 'Planned', tmpl: Template.upcomingTmpl}
+          { key: 'Distance', label: 'Distance (Km)' },
+          { key: 'Planned', label: 'Planned', tmpl: Template.upcomingTmpl }
         ]
       };
     },
     Planned: function () {
       var collection = truckPlanning.find({Planned: true, Departed: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
-      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
-      var tableData = getTableData(collection);
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Departed': 1, 'Distance': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var tableData = getTableData(collection, 'PlannedKmCount');
       return {
         collection: tableData,
         rowsPerPage: 20,
@@ -48,15 +49,15 @@ if (Meteor.isClient) {
           { key: 'LoadDisch', label: 'To' },
           { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Departed', label: 'Departed / Cancel', tmpl: Template.plannedTmpl}
+          { key: 'Departed', label: 'Departed / Cancel', tmpl: Template.plannedTmpl }
         ]
       };
     },
 
     Departed: function () {
       var collection = truckPlanning.find({Planned: true, Departed: true, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
-      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
-      var tableData = getTableData(collection);
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Departed': 1, 'Distance': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      var tableData = getTableData(collection, 'DepartedKmCount');
       return {
         collection: tableData,
         rowsPerPage: 20,
@@ -66,15 +67,16 @@ if (Meteor.isClient) {
           { key: 'LoadDisch', label: 'To' },
           { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Departed', label: 'Cancel', tmpl: Template.departedTmpl}
+          { key: 'Departed', label: 'Cancel', tmpl: Template.departedTmpl }
         ]
       };
     }
   });
 
-  function getTableData (collection) {
+  function getTableData (collection, elementId) {
     var array = collection.fetch();
     var result = [];
+    var totalKm = 0;
       for (var i = 0; i < array.length; i++) {
         var order = array[i];
           var concatenatedCode = order.From.concat(order.LoadDisch);
@@ -86,6 +88,9 @@ if (Meteor.isClient) {
             // refresh the neededDepartTimeGoogle data
             neededDepartTimeGoogle = truckPlanning.findOne({_id: order._id}, {fields: {'NeededDepartTimeGoogle': 1}}).NeededDepartTimeGoogle;
           }
+          if (typeof (order.Distance) === 'number') {
+            totalKm += order.Distance;
+          }
             result.push({
               _id : order._id,
               concatenatedCode: concatenatedCode,
@@ -96,10 +101,12 @@ if (Meteor.isClient) {
               PlannedArrivalTime: moment(plannedArrivalTime).format('DD/MM/YYYY hh:mm'),
               To: order.To,
               Planned: order.Planned,
-              Departed: order.Departed
-
+              Departed: order.Departed,
+              Distance: Math.round(order.Distance)
             });
       }
+      var roundedKm = Math.round(totalKm);
+      document.getElementById(elementId).innerHTML = roundedKm;
       return result;
   }
 

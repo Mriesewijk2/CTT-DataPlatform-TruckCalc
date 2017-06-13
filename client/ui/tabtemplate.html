@@ -13,14 +13,17 @@
          These can be defined in any order you like.
     -->
     {{#tabContent slug="Upcoming"}}
+      Upcoming km: <p id="UpcomingKmCount"></p>
       {{> reactiveTable class="table table-bordered table-hover" settings=Upcoming}}
     {{/tabContent}}
 
     {{#tabContent slug="Planned"}}
+      Planned km: <p id="PlannedKmCount"></p>
       {{> reactiveTable class="table table-bordered table-hover" settings=Planned}}
     {{/tabContent}}
 
     {{#tabContent slug="Departed"}}
+      Departed km: <p id="DepartedKmCount"></p>
       {{> reactiveTable class="table table-bordered table-hover" settings=Departed}}
     {{/tabContent}}
   {{/basicTabs}}
