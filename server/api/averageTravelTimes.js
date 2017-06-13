@@ -17,17 +17,18 @@ if (Meteor.isServer) {
         if (moment().subtract(moment(exists.editedAt), 'days') > 7) {
           // the algorithm will not be used atm due to inaccuracies and
           // var calculatedTravelTime = averageTravelTimeCalculate(departCode, destinationCode);
-          var googleTime = getGoogleTravelTime(departObject, destinationObject);
-          averageTravelTimes.update(exists._id, {$set: {googleTravelTime: googleTime, editedAt: moment(new Date()).format()}});
+          var google = getGoogleCalculation(departObject, destinationObject);
+          averageTravelTimes.update(exists._id, {$set: {googleTravelTime: google.duration, googleDistance: (google.distance / 1000), editedAt: moment(new Date()).format()}});
         }
       } else {
-        var googleTime = getGoogleTravelTime(departObject, destinationObject);
+        var google = getGoogleCalculation(departObject, destinationObject);
         // var calculatedTravelTime = averageTravelTimeCalculate(departObject, destinationObject);
         averageTravelTimes.insert({
           concatenatedCode: concatenatedCode,
           departCode: departCode,
           destinationCode: destinationCode,
-          googleTravelTime: googleTime,
+          googleTravelTime: google.duration,
+          googleDistance: (google.distance / 1000),
           createdAt: moment(new Date()).format(),
           editedAt: moment(new Date()).format()
         });

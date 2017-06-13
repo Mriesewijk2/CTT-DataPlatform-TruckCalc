@@ -78,9 +78,9 @@ if (Meteor.isServer) {
         //   arrivalDateTime = arrivalTimeTransform(truckPlanning.PlannedArrivalTime, truckPlanning.PlannedDate);
         //   var neededDepartTimeData = arrivalDateTime.subtract(averageTime.averageCalculatedTravelTime, 'minutes').format();
         // }
-        planning.update(truckPlanning._id, {$set: {NeededDepartTimeGoogle: neededDepartTimeGoogle}});
+        planning.update(truckPlanning._id, {$set: {NeededDepartTimeGoogle: neededDepartTimeGoogle, Distance: averageTime.googleDistance}});
       } else {
-        planning.update(truckPlanning._id, {$set: {NeededDepartTimeGoogle: 'Could not be calculated'}});
+        planning.update(truckPlanning._id, {$set: {NeededDepartTimeGoogle: 'Could not be calculated', Distance: 'could not be calculated'}});
       }
     }
   });

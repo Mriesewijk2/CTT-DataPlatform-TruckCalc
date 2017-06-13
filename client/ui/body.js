@@ -10,6 +10,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import './body.html';
 import './table.js';
 import '../subscriptions.js';
+import '../main.css';
 
 if (Meteor.isClient) {
   Template.body.onCreated(function bodyOnCreated () {

@@ -5,7 +5,7 @@ import { HTTP } from 'meteor/http';
 import './apiKeys.js';
 
 if (Meteor.isServer) {
-  getGoogleTravelTime = function (origin, destination) {
+  getGoogleCalculation = function (origin, destination) {
     if (origin && destination) {
       var originGeolocations = origin.Latitude + ',' + origin.Longitude;
       var destinationGeolocations = destination.Latitude + ',' + destination.Longitude;
@@ -34,7 +34,10 @@ if (Meteor.isServer) {
     } else if (result.data.status === 'MAX_ROUTE_LENGTH_EXCEEDED') {
       return 'Ik trek die route niet joh; veels te lang!';
     } else {
-      return result.data.rows[0].elements[0].duration.value / 60;
+      var array = [];
+      array["duration"] = result.data.rows[0].elements[0].duration.value / 60;
+      array["distance"] = result.data.rows[0].elements[0].distance.value;
+      return array;
     }
   };
 }
