@@ -8,7 +8,7 @@ if (Meteor.isClient) {
   Template.tabtemplate.helpers({
     Upcoming: function () {
       var collection = truckPlanning.find({Planned: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
-      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Planned': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Input': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       var currentTime = moment();
       return {
@@ -28,16 +28,19 @@ if (Meteor.isClient) {
         },
         fields: [
           { key: 'From', label: 'From' },
-          { key: 'LoadDisch', label: 'To' },
-          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
+          { key: 'LoadDisch', label: 'Via' },
+          { key: 'To', label: 'To'},
+          { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Planned', label: 'Planned', tmpl: Template.upcomingTmpl}
+          { key: 'Tmpl' , label: 'Input', tmpl: Template.datepicker},
+          { key: 'Input' , label: 'Inputtxt'}
+
         ]
       };
     },
     Planned: function () {
       var collection = truckPlanning.find({Planned: true, Departed: {$ne: true}, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
-      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Departed': 1, 'Input': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       return {
         collection: tableData,
@@ -48,14 +51,15 @@ if (Meteor.isClient) {
           { key: 'LoadDisch', label: 'To' },
           { key: 'PlannedDepartTimeGoogle', label: 'Planned Depart Time Google', sortOrder: 0, sortDirection: 'ascending' },
           { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Departed', label: 'Departed / Cancel', tmpl: Template.plannedTmpl}
+          { key: 'Departed', label: 'Departed / Cancel', tmpl: Template.plannedTmpl},
+          { key: 'Input' , label: 'Inputtxt'}
         ]
       };
     },
 
     Departed: function () {
       var collection = truckPlanning.find({Planned: true, Departed: true, From: {$ne: ''}, LoadDisch: {$ne: ''}, PlannedDate: {$ne: ''}, PlannedArrivalTime: {$ne: ''}},
-      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
+      { fields: {'_id': 1, 'From': 1, 'LoadDisch': 1, 'NeededDepartTimeGoogle': 1, 'PlannedArrivalTime': 1, 'PlannedDate': 1, 'To': 1, 'Departed': 1}, limit: 100, sort: {'PlannedDate': -1} });
       var tableData = getTableData(collection);
       return {
         collection: tableData,
@@ -85,6 +89,11 @@ if (Meteor.isClient) {
             Meteor.call('truckPlanning.calculate', order._id);
             // refresh the neededDepartTimeGoogle data
             neededDepartTimeGoogle = truckPlanning.findOne({_id: order._id}, {fields: {'NeededDepartTimeGoogle': 1}}).NeededDepartTimeGoogle;
+
+          }
+          var inputvar;
+          if(order.Input != null){
+            inputvar = moment(order.Input).format('DD/MM/YYYY hh:mm');
           }
             result.push({
               _id : order._id,
@@ -96,7 +105,10 @@ if (Meteor.isClient) {
               PlannedArrivalTime: moment(plannedArrivalTime).format('DD/MM/YYYY hh:mm'),
               To: order.To,
               Planned: order.Planned,
-              Departed: order.Departed
+              Departed: order.Departed,
+              Input: order.Input,
+              //Tmpl:order.Tmlp
+
 
             });
       }

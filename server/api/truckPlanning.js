@@ -18,6 +18,24 @@ if (Meteor.isServer) {
     'set.departedfalse' (id) {
       truckPlanning.update(id, {$set: {Departed: false}});
     },
+    'set.input' (id,value) {
+      console.log(id);
+      truckPlanning.update(id, {$set: {Input: value}});
+    },
+
+    'addAppointment' ( id, value ) {
+      check( value, String );
+      console.log('addapointmentid',id);
+      console.log('addapointmentvalue',value);
+
+     try {
+       truckPlanning.update(id, {$set: {Input: value}});
+     }
+     catch( exception ) {
+       return exception;
+     }
+   },
+
     'truckPlanning.calculate' (id) {
       var truckPlanning = planning.findOne({'_id': id});
       var concatenatedCode = truckPlanning.From.concat(truckPlanning.LoadDisch);
