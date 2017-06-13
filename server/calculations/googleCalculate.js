@@ -37,7 +37,6 @@ if (Meteor.isServer) {
       var array = [];
       array["duration"] = result.data.rows[0].elements[0].duration.value / 60;
       array["distance"] = result.data.rows[0].elements[0].distance.value;
-      console.log(array);
       return array;
     }
   };
