@@ -6,9 +6,7 @@ if (Meteor.isServer) {
   // wait for collection to be loaded
   var planning = truckPlanning;
   Meteor.methods({
-    'set.plannedtrue' (id) {
-      truckPlanning.update(id, {$set: {Planned: true}});
-    },
+    
     'set.plannedfalse' (id) {
       truckPlanning.update(id, {$set: {Planned: false}});
     },
@@ -29,11 +27,12 @@ if (Meteor.isServer) {
       console.log('addapointmentvalue',value);
 
      try {
-       truckPlanning.update(id, {$set: {Input: value}});
+       truckPlanning.update(id, {$set: {Input: value, Planned: true}});
      }
      catch( exception ) {
        return exception;
      }
+
    },
 
     'truckPlanning.calculate' (id) {
