@@ -41,51 +41,6 @@ if (Meteor.isClient) {
     }
   });
 
-  /*
-  Template.pickertemplate.onRendered(function() {
-    this.$('.datetimepicker').datetimepicker();
-  });
-  */
-
-  /*
-  Template.pickertmpl.onRendered(function() {
-    const id = this;
-    this.$('.datetimepicker').datetimepicker({
-    }).on('dp.change', function(e){
-      //Session.set("selected", e.date.format());
-      //Meteor.call('set.input', ._id, e.date.format());
-      console.log(id);
-      console.log('asdfasdf');
-    });
-  });
-  */
-  Template.pickertmpl.events({
-    'submit .sbmt'(event) {
-      var datetime = 0;
-      // Prevent default browser form submit
-      event.preventDefault();
-      //console.log('asdfasdf');
-
-
-      this.$('.datetimepicker').datetimepicker({
-      }).on('dp.change', function(e){
-        //Session.set("selected", e.date.format());
-        //Meteor.call('set.input', ._id, e.date.format());
-        datetime = e.date.format();
-        console.log(e);
-        //console.log('asdfasdf');
-      });
-      // Get value from form element
-    //const target = event.target;
-    //const text = target.text.value;
-    // Insert a task into the collection
-    Meteor.call('set.input', this._id, datetim);
-    // Clear form
-    target.text.value = '';
-    }
-
-
-  });
 
 
   Template.datepicker.onRendered( () => {
@@ -116,11 +71,46 @@ Template.datepicker.events({
           Bert.alert( error.reason, 'danger' );
         }
         else {
+          picker.val( '' );          
+          Bert.alert( 'Order planned!', 'success' );
+        }
+      });
+    }
+
+    else {
+      Bert.alert( 'Make sure to pick an appointment time!', 'danger' );
+    }
+  }
+});
+
+
+Template.datepicker2.events({
+  'submit form' ( event, template ) {
+    event.preventDefault();
+    //alert('clicked')
+    var id = this._id;
+    console.log('datepickerid',id);
+
+    let picker   = Template.instance().$( '.datetimepicker' ),
+        dateTime = picker.data( 'DateTimePicker' ).date();
+        console.log(dateTime);
+
+    if ( dateTime ) {
+      let appointment = dateTime.format();
+      console.log(appointment);
+
+      Meteor.call( 'addAppointment', id, appointment, ( error, response ) => {
+        if ( error ) {
+          Bert.alert( error.reason, 'danger' );
+        }
+        else {
           picker.val( '' );
           Bert.alert( 'Order planned!', 'success' );
         }
       });
-    } else {
+    }
+
+    else {
       Bert.alert( 'Make sure to pick an appointment time!', 'danger' );
     }
   }

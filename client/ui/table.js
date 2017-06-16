@@ -29,12 +29,11 @@ if (Meteor.isClient) {
           { key: 'From', label: 'From' },
           { key: 'LoadDisch', label: 'Via' },
           { key: 'To', label: 'To'},
-          { key: 'PlannedDepartTimeGoogle', label: 'Recommended Departure Time', sortOrder: 0, sortDirection: 'ascending' },
-          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Tmpl' , label: 'Input', tmpl: Template.datepicker},
-          { key: 'Input' , label: 'Inputtxt'},
           { key: 'Distance', label: 'Distance (Km)' },
-          { key: 'Planned', label: 'Planned', tmpl: Template.upcomingTmpl }
+          { key: 'PlannedDepartTimeGoogle', label: 'Recommended Departure', sortOrder: 0, sortDirection: 'ascending' },
+          { key: 'PlannedArrivalTime', label: 'Planned Arrival' },
+          { key: 'Tmpl' , label: 'Input', tmpl: Template.datepicker}
+
         ]
       };
     },
@@ -48,11 +47,13 @@ if (Meteor.isClient) {
         showFilter: true,
         fields: [
           { key: 'From', label: 'From' },
-          { key: 'LoadDisch', label: 'To' },
-          { key: 'PlannedDepartTimeGoogle', label: 'Recommended Departure Time', sortOrder: 0, sortDirection: 'ascending' },
-          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
-          { key: 'Departed', label: 'Departed / Cancel', tmpl: Template.plannedTmpl},
-          { key: 'Input' , label: 'Inputtxt'}
+          { key: 'LoadDisch', label: 'Via' },
+          { key: 'To', label: 'To'},
+          { key: 'Distance', label: 'Distance (Km)' },
+          { key: 'Input' , label: 'Planned Departure'},
+          { key: 'PlannedArrivalTime', label: 'Planned Arrival' },
+          { key: 'Tmpl' , label: 'Change', tmpl: Template.datepicker2},
+          { key: 'Departed', label: 'Departed / Cancel', tmpl: Template.plannedTmpl}
         ]
       };
     },
@@ -67,9 +68,10 @@ if (Meteor.isClient) {
         showFilter: true,
         fields: [
           { key: 'From', label: 'From' },
-          { key: 'LoadDisch', label: 'To' },
-          { key: 'PlannedDepartTimeGoogle', label: 'Recommended Departure Time', sortOrder: 0, sortDirection: 'ascending' },
-          { key: 'PlannedArrivalTime', label: 'Planned Arrival Time' },
+          { key: 'LoadDisch', label: 'Via' },
+          { key: 'To', label: 'To'},
+          { key: 'Input' , label: 'Planned Departure'},
+          { key: 'PlannedArrivalTime', label: 'Planned Arrival' },
           { key: 'Departed', label: 'Cancel', tmpl: Template.departedTmpl }
         ]
       };
@@ -107,7 +109,7 @@ if (Meteor.isClient) {
               To: order.To,
               Planned: order.Planned,
               Departed: order.Departed,
-              Input: order.Input,
+              Input: moment(order.Input).format('MM-DD HH:mm'),
               //Tmpl:order.Tmlp
               Distance: Math.round(order.Distance)
             });
