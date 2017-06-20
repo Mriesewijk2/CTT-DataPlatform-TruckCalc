@@ -6,3 +6,12 @@
     border: 0;
     background: transparent;
 }
+
+.img-responsive{
+  padding:30px!important;
+}
+
+.mesio{
+  height:50px!important;
+  width:50px!important;
+}

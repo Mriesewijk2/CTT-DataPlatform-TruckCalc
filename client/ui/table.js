@@ -45,6 +45,16 @@ if (Meteor.isClient) {
         collection: tableData,
         rowsPerPage: 20,
         showFilter: true,
+        rowClass: function (item) {
+          var css = 'success';
+          var timediff = item.Diff2;
+          if (timediff < 60 && timediff > 30) {
+            css = 'warning';
+          } else if (timediff < 30) {
+            css = 'danger';
+          }
+          return css;
+        },
         fields: [
           { key: 'From', label: 'From' },
           { key: 'LoadDisch', label: 'Via' },
@@ -98,12 +108,14 @@ if (Meteor.isClient) {
             inputvar = moment(order.Input).format('DD/MM/YYYY hh:mm');
           }
           var diff = moment(neededDepartTimeGoogle).diff(moment(), 'minutes');
+          var diff2 = moment(order.Input).diff(moment(), 'minutes');
             result.push({
               _id : order._id,
               concatenatedCode: concatenatedCode,
               From: order.From,
               LoadDisch: order.LoadDisch,
               Diff: diff,
+              Diff2: diff2,
               PlannedDepartTimeGoogle: moment(neededDepartTimeGoogle).format('MM-DD HH:mm'),
               PlannedArrivalTime: moment(plannedArrivalTime).format('MM-DD HH:mm'),
               To: order.To,

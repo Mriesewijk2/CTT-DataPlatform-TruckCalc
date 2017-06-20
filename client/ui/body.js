@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import { moment } from 'meteor/momentjs:moment';
 import { $ } from 'meteor/jquery';
 import { Meteor } from 'meteor/meteor';
-import { customerGeolocations } from '../../lib/collections.js';
+import { customerGeolocations , truckPlanning } from '../../lib/collections.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 //import {ReactiveTabs} from 'meteor/templates:tabs';
@@ -28,9 +28,11 @@ if (Meteor.isClient) {
   Template.plannedTmpl.events({
     'click #plannedfalse' () {
       Meteor.call('set.plannedfalse', this._id);
+      Bert.alert( 'Planning canceled!', 'success' );
     },
     'click #departedtrue' () {
       Meteor.call('set.departedtrue', this._id);
+      Bert.alert( 'Truck departed!', 'success' );
     }
 
   });
@@ -38,6 +40,7 @@ if (Meteor.isClient) {
   Template.departedTmpl.events({
     'click #departedfalse' () {
       Meteor.call('set.departedfalse', this._id);
+      Bert.alert( 'Departure canceled!', 'success' );
     }
   });
 
@@ -71,14 +74,24 @@ Template.datepicker.events({
           Bert.alert( error.reason, 'danger' );
         }
         else {
-          picker.val( '' );          
+          picker.val( '' );
           Bert.alert( 'Order planned!', 'success' );
         }
       });
     }
 
     else {
-      Bert.alert( 'Make sure to pick an appointment time!', 'danger' );
+      var planneddep = truckPlanning.findOne({_id: id}, {fields: {'NeededDepartTimeGoogle': 1}}).NeededDepartTimeGoogle;
+      //Bert.alert( 'Make sure to pick an appointment time!', 'danger' );
+      Meteor.call( 'addAppointment', id, planneddep, ( error, response ) => {
+        if ( error ) {
+          Bert.alert( error.reason, 'danger' );
+        }
+        else {
+          picker.val( '' );
+          Bert.alert( 'Order planned!', 'success' );
+        }
+      });
     }
   }
 });
@@ -105,13 +118,13 @@ Template.datepicker2.events({
         }
         else {
           picker.val( '' );
-          Bert.alert( 'Order planned!', 'success' );
+          Bert.alert( 'Planning changed!', 'success' );
         }
       });
     }
 
     else {
-      Bert.alert( 'Make sure to pick an appointment time!', 'danger' );
+      Bert.alert( 'Make sure to pick a departure time!', 'danger' );
     }
   }
 });
