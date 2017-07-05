@@ -17,5 +17,5 @@ A first version of the CTT dataplatform which will be used to support decision m
     - mongoimport -d {{ database_name }} -c {{collection_name}} --type csv --file {{ path/to/file.csv }}
   - Files in JSON format
     - Provide the needed JSON files for MetaContainer
-- Command: `grunt mongoimport`
+    - Command: `grunt mongoimport`
 - Command: `meteor` with the added credentials for the MetaContainer
