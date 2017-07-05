@@ -1,1 +1,8 @@
 /* CSS declarations go here */
+.inline-p{
+  display:inline;
+}
+
+.img-responsive{
+  padding:50px;
+}
